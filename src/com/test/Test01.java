@@ -1,5 +1,6 @@
 package com.test;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 import com.sharp.Bitmap;

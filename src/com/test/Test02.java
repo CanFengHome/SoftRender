@@ -1,16 +1,19 @@
 package com.test;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.Random;
 
 import com.sharp.Bitmap;
 import com.sharp.GameApplication;
+import com.sharp.IDrawGraphics;
 import com.sharp.IGameObject;
 
 /*
  * window游戏开发大师技巧2d demo4_1
  */
-public class Test02 implements IGameObject {
+public class Test02 implements IGameObject, IDrawGraphics{
 
 	@Override
 	public void initData() {
@@ -39,6 +42,13 @@ public class Test02 implements IGameObject {
 	@Override
 	public void clear() {
 
+	}
+
+	@Override
+	public void drawGraphicsContent(Graphics gfx) {
+		gfx.setColor(Color.red);
+		gfx.setFont(new Font("", 0, 32));
+		gfx.drawString("Hello", 100, 100);
 	}
 }
 

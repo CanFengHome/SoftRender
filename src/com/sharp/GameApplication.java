@@ -1,5 +1,7 @@
 package com.sharp;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +67,16 @@ public class GameApplication {
 		}
 	}
 
-
+	public void drawGraphicsContent() {
+		Graphics gfx = m_window.getDisplayGraphics();
+		
+		for (IGameObject objItem : m_gameObjs) {
+			if (objItem instanceof IDrawGraphics) {
+				IDrawGraphics drawObj = (IDrawGraphics)(objItem);
+				drawObj.drawGraphicsContent(gfx);
+			}
+		}
+	}
 
 
 

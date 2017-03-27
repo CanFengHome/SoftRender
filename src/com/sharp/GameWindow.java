@@ -1,6 +1,7 @@
 package com.sharp;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
@@ -33,6 +34,10 @@ public class GameWindow extends Canvas {
 	
 	public Input getInput() {
 		return m_input;
+	}
+	
+	public Graphics getDisplayGraphics() {
+		return m_displayImage.getGraphics();
 	}
 	
 	public GameWindow(int width, int height, String title) {
@@ -78,8 +83,12 @@ public class GameWindow extends Canvas {
 		//Therefore, this call should effectively copy the frameBuffer into the
 		//displayImage.
 		m_frameBuffer.CopyToByteArray(m_displayComponents);
+		
+		GameApplication.getInstance().drawGraphicsContent();
+		
 		m_graphics.drawImage(m_displayImage, 0, 0, 
 			m_frameBuffer.GetWidth(), m_frameBuffer.GetHeight(), null);
+		
 		m_bufferStrategy.show();
 	}
 }
