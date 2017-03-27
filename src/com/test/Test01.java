@@ -1,5 +1,7 @@
 package com.test;
 
+import java.awt.Graphics;
+
 import com.sharp.Bitmap;
 import com.sharp.GameApplication;
 import com.sharp.IGameObject;
@@ -7,7 +9,7 @@ import com.sharp.IGameObject;
 /*
  * 仅为验证框架是否合理, 是否能够正确显示要绘制的内容
  */
-public class Test1 implements IGameObject {
+public class Test01 implements IGameObject {
 
 	@Override
 	public void initData() {
@@ -39,7 +41,6 @@ public class Test1 implements IGameObject {
 	public void clear() {
 		
 	}
-
 }
 
 
