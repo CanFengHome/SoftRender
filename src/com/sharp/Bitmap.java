@@ -35,14 +35,21 @@ public class Bitmap
 		m_components = new byte[m_width * m_height * 4];
 	}
 
-	public Bitmap(String fileName) throws IOException
+	public Bitmap(String fileName)
 	{
 		int width = 0;
 		int height = 0;
 		byte[] components = null;
 
-		BufferedImage image = ImageIO.read(new File(fileName));
-
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(new File(fileName));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		width = image.getWidth();
 		height = image.getHeight();
 
@@ -103,6 +110,54 @@ public class Bitmap
 		m_components[destIndex + 1] = (byte)((src.GetComponent(srcIndex + 1) & 0xFF) * lightAmt);
 		m_components[destIndex + 2] = (byte)((src.GetComponent(srcIndex + 2) & 0xFF) * lightAmt);
 		m_components[destIndex + 3] = (byte)((src.GetComponent(srcIndex + 3) & 0xFF) * lightAmt);
+	}
+	
+	public void BitBitmap(int destX, int destY, int srcX, int srcY, Bitmap src) {
+		if (destX >= m_width || destY >= m_height ||
+			(destX + m_width) <= 0 || (destY + m_height) <= 0) {
+			return;
+		}
+		
+		assert srcX >= 0 && srcX < src.m_width;
+		assert srcY >= 0 && srcY < src.m_height;
+		
+		int x1 = destX;
+		int y1 = destY;
+		int x2 = x1 + m_width - 1;
+		int y2 = y1 + m_height - 1;
+		
+		if (x1 < 0)
+			x1 = 0;
+		if (y1 < 0)
+			y1 = 0;
+		if (x2 >= m_width)
+			x2 = m_width - 1;
+		if (y2 >= m_height)
+			y2 = m_height - 1;
+		
+		int x_off = x1 - destX;
+		int y_off = y1 - destY;
+		int dx = x2 - x1 + 1;
+		int dy = y2 - y1 + 1;
+		int startSrcX = srcX + x_off;
+		int startSrcY = srcY + y_off;
+		
+		int srcDx = src.m_width - startSrcX;
+		int srcDy = src.m_height - startSrcY;
+		dx = Math.min(dx, srcDx);
+		dy = Math.min(dy, srcDy);
+		
+		for (int flagY=0; flagY < dy; ++flagY) {
+			for (int flagX=0; flagX < dx; ++flagX) {
+				int destIndex = ((x1 + flagX) + (y1 + flagY) * m_width) * 4;
+				int srcIndex = ((startSrcX + flagX) + (startSrcY + flagY) * src.GetWidth()) * 4;
+				
+				m_components[destIndex    ] = (byte)((src.GetComponent(srcIndex) & 0xFF) );
+				m_components[destIndex + 1] = (byte)((src.GetComponent(srcIndex + 1) & 0xFF) );
+				m_components[destIndex + 2] = (byte)((src.GetComponent(srcIndex + 2) & 0xFF) );
+				m_components[destIndex + 3] = (byte)((src.GetComponent(srcIndex + 3) & 0xFF) );
+			}
+		}
 	}
 
 	/**

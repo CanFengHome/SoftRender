@@ -1,8 +1,5 @@
 package com.test;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
 import com.sharp.Bitmap;
 import com.sharp.GameApplication;
 import com.sharp.IGameObject;

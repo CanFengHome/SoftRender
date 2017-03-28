@@ -46,7 +46,26 @@ public class GameApplication {
 			objItem.initData();
 		}
 		
+		long previousTime = System.nanoTime();
+		final float fixedDelta = 1000 / 60;
 		while (true) {
+			long currentTime = System.nanoTime();
+			float delta = (float)((currentTime - previousTime)/1000000.0); // 毫秒
+			
+			if (delta < fixedDelta)
+			{
+				try {
+					Thread.sleep((long)(fixedDelta - delta));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				continue;
+			}
+			else
+			{
+				previousTime = currentTime;
+			}
+			
 			for (IGameObject objItem : m_gameObjs) {
 				objItem.update(0.0f);
 			}
