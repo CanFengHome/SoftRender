@@ -82,16 +82,7 @@ public class Bitmap
 		Arrays.fill(m_components, shade);
 	}
 
-	/**
-	 * Sets the pixel at (x, y) to the color specified by (a,b,g,r).
-	 *
-	 * @param x Pixel location in X
-	 * @param y Pixel location in Y
-	 * @param a Alpha component
-	 * @param b Blue component
-	 * @param g Green component
-	 * @param r Red component
-	 */
+
 	public void DrawPixel(int x, int y, byte a, byte b, byte g, byte r)
 	{
 		int index = (x + y * m_width) * 4;
@@ -99,6 +90,14 @@ public class Bitmap
 		m_components[index + 1] = b;
 		m_components[index + 2] = g;
 		m_components[index + 3] = r;
+	}
+	
+	public void DrawPixel(int x, int y, Color3B color) {
+		int index = (x + y * m_width) * 4;
+		m_components[index    ] = (byte)255;
+		m_components[index + 1] = color.getB();
+		m_components[index + 2] = color.getG();
+		m_components[index + 3] = color.getR();
 	}
 
 	public void CopyPixel(int destX, int destY, int srcX, int srcY, Bitmap src, float lightAmt)

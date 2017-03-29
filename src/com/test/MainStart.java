@@ -1,8 +1,6 @@
-package com.sharp;
+package com.test;
 
-import com.test.Test01;
-import com.test.Test02;
-import com.test.Test03;
+import com.sharp.GameApplication;
 
 public class MainStart {
 
@@ -12,7 +10,8 @@ public class MainStart {
 		
 //		app.addGameObject(new Test01());
 //		app.addGameObject(new Test02());
-		app.addGameObject(new Test03());
+//		app.addGameObject(new Test03());
+		app.addGameObject(new Test04());
 		
 		app.run();
 	}
