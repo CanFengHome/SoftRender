@@ -11,7 +11,8 @@ public class MainStart {
 //		app.addGameObject(new Test01());
 //		app.addGameObject(new Test02());
 //		app.addGameObject(new Test03());
-		app.addGameObject(new Test04());
+//		app.addGameObject(new Test04());
+		app.addGameObject(new Test05());
 		
 		app.run();
 	}
