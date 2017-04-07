@@ -1,34 +1,6 @@
 
 
 
-// 3x3 matrix functions (note there others in T3DLIB1.CPP|H)
-void Mat_Add_3X3(MATRIX3X3_PTR ma, MATRIX3X3_PTR mb, MATRIX3X3_PTR msum);
-void Mat_Mul_VECTOR3D_3X3(VECTOR3D_PTR  va, MATRIX3X3_PTR mb,VECTOR3D_PTR  vprod);
-int Mat_Inverse_3X3(MATRIX3X3_PTR m, MATRIX3X3_PTR mi);
-void Mat_Init_3X3(MATRIX3X3_PTR ma, 
-                        float m00, float m01, float m02,
-                        float m10, float m11, float m12,
-                        float m20, float m21, float m22);
-void Print_Mat_3X3(MATRIX3X3_PTR ma, char *name);
-float Mat_Det_3X3(MATRIX3X3_PTR m);
-int Solve_3X3_System(MATRIX3X3_PTR A, MATRIX1X3_PTR X, MATRIX1X3_PTR B);
-
-// 4x4 matrix functions
-void Mat_Add_4X4(MATRIX4X4_PTR ma, MATRIX4X4_PTR mb, MATRIX4X4_PTR msum);
-void Mat_Mul_4X4(MATRIX4X4_PTR ma, MATRIX4X4_PTR mb, MATRIX4X4_PTR mprod);
-void Mat_Mul_1X4_4X4(MATRIX1X4_PTR ma, MATRIX4X4_PTR mb, MATRIX1X4_PTR mprod);
-void Mat_Mul_VECTOR3D_4X4(VECTOR3D_PTR  va, MATRIX4X4_PTR mb, VECTOR3D_PTR  vprod);
-void Mat_Mul_VECTOR3D_4X3(VECTOR3D_PTR  va, MATRIX4X3_PTR mb, VECTOR3D_PTR  vprod);
-void Mat_Mul_VECTOR4D_4X4(VECTOR4D_PTR  va, MATRIX4X4_PTR mb, VECTOR4D_PTR  vprod);
-void Mat_Mul_VECTOR4D_4X3(VECTOR4D_PTR  va, MATRIX4X4_PTR mb, VECTOR4D_PTR  vprod);
-int Mat_Inverse_4X4(MATRIX4X4_PTR m, MATRIX4X4_PTR mi);
-void Mat_Init_4X4(MATRIX4X4_PTR ma, 
-                        float m00, float m01, float m02, float m03,
-                        float m10, float m11, float m12, float m13,
-                        float m20, float m21, float m22, float m23,
-                        float m30, float m31, float m32, float m33);
-void Print_Mat_4X4(MATRIX4X4_PTR ma, char *name);
-
 // quaternion functions
 void QUAT_Add(QUAT_PTR q1, QUAT_PTR q2, QUAT_PTR qsum);
 void QUAT_Sub(QUAT_PTR q1, QUAT_PTR q2, QUAT_PTR qdiff);

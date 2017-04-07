@@ -35,6 +35,47 @@ public class Matrix4X3 {
 		m[3][column] = mat.m[3][column];
 	}
 	
+	// 4D homogenous vector, thus the function assumes that
+	// w=1 to carry out the multiply, also the function
+	// does not carry out the last column multiply since
+	// we are assuming w=1, there is no point
+	public static Vec3 vec3MultiplyMat4X3(Vec3 va, Matrix4X3 mb) {
+		float vaArr[] = new float[]{ va.getX(), va.getY(), va.getZ()};
+		float resultArr[] = new float[3];
+		for (int col=0; col<3; ++col) {
+			float sum = 0;
+			for (int row=0; row<3; ++row) {
+				sum += vaArr[row] * mb.m[row][col];
+			}
+			resultArr[col] = sum;
+		}
+	    
+		return new Vec3(resultArr[0], resultArr[1], resultArr[2]);
+	}
+	
+	// this function multiplies a VECTOR4D against a 
+	// 4x3 matrix - ma*mb and stores the result in mprod
+	// the function assumes that the last column of
+	// mb is [0 0 0 1]t , thus w just gets replicated
+	// from the vector [x y z w]
+	public static Vec4 vec4MultiplyMat4X3(Vec4 va, Matrix4X3 mb) {
+		float vaArr[] = new float[] { va.getX(), va.getY(), va.getZ(), va.getW() };
+		float resultArr[] = new float[4];
+		for (int col = 0; col < 4; col++) {
+			float sum = 0; // used to hold result
+			for (int row = 0; row < 4; row++) {
+				// add in next product pair
+				sum += vaArr[row] * mb.m[row][col];
+			}
+			resultArr[col] = sum;
+		}
+		return new Vec4(resultArr[0], resultArr[1], resultArr[2], va.getW());
+	}
+	
+	
+	
+	
+	
 	public void print() {
 		for (int row=0; row<4; ++row) {
 			for (int col=0; col<3; ++col) {
