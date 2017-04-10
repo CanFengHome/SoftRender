@@ -173,6 +173,41 @@ public class Matrix4X4 {
 							 -camera.getPos().getX(), -camera.getPos().getY(), -camera.getPos().getZ(), 1);
 	}
 	
+	public static Matrix4X4 getScaleMatrix(float xScale, float yScale, float zScale) {
+		return new Matrix4X4(
+				xScale,0,0,0, 
+				0,yScale,0,0, 
+				0,0,zScale,0, 
+				0,0,0,1);
+	}
+	
+	public static Matrix4X4 getRotationMatrix(float x, float y, float z) {
+		Matrix4X4 rx = new Matrix4X4();
+		Matrix4X4 ry = new Matrix4X4();
+		Matrix4X4 rz = new Matrix4X4();
+
+		// z
+		rz.m[0][0] = (float)Math.cos(z); rz.m[0][1] = (float)Math.sin(z);rz.m[0][2] = 0;				rz.m[0][3] = 0;
+		rz.m[1][0] = -(float)Math.sin(z);rz.m[1][1] = (float)Math.cos(z);rz.m[1][2] = 0;				rz.m[1][3] = 0;
+		rz.m[2][0] = 0;					 rz.m[2][1] = 0;					 rz.m[2][2] = 1;			rz.m[2][3] = 0;
+		rz.m[3][0] = 0;					 rz.m[3][1] = 0;					 rz.m[3][2] = 0;			rz.m[3][3] = 1;
+
+		// x
+		rx.m[0][0] = 1;					rx.m[0][1] = 0;					rx.m[0][2] = 0;					rx.m[0][3] = 0;
+		rx.m[1][0] = 0;					rx.m[1][1] = (float)Math.cos(x);rx.m[1][2] = -(float)Math.sin(x);rx.m[1][3] = 0;
+		rx.m[2][0] = 0;					rx.m[2][1] = (float)Math.sin(x);rx.m[2][2] = (float)Math.cos(x);rx.m[2][3] = 0;
+		rx.m[3][0] = 0;					rx.m[3][1] = 0;					rx.m[3][2] = 0;					rx.m[3][3] = 1;
+
+		// y
+		ry.m[0][0] = (float)Math.cos(y);ry.m[0][1] = 0;					ry.m[0][2] = -(float)Math.sin(y);ry.m[0][3] = 0;
+		ry.m[1][0] = 0;					ry.m[1][1] = 1;					ry.m[1][2] = 0;					ry.m[1][3] = 0;
+		ry.m[2][0] = (float)Math.sin(y);ry.m[2][1] = 0;					ry.m[2][2] = (float)Math.cos(y);ry.m[2][3] = 0;
+		ry.m[3][0] = 0;					ry.m[3][1] = 0;					ry.m[3][2] = 0;					ry.m[3][3] = 1;
+
+		Matrix4X4 tempMat = Matrix4X4.multiplyMatrix(rx, ry);
+		return Matrix4X4.multiplyMatrix(tempMat, rz);
+	}
+	
 	
 
 	public void print() {

@@ -48,7 +48,8 @@ public class GameApplication {
 			for (IGameObject objItem : m_gameObjs) {
 				objItem.update(0.0f);
 			}
-			
+
+			m_window.getFrameBuffer().Clear((byte)0x80);
 			for (IGameObject objItem : m_gameObjs) {
 				objItem.render(m_window.getFrameBuffer());
 			}
