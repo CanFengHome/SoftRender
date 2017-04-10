@@ -151,7 +151,27 @@ public class Matrix4X4 {
 		
 		return true;
 	}
+
+	public static Matrix4X4 getTransformMat(float x, float y, float z) {
+		return new Matrix4X4(1,0,0,0, 
+				0,1,0,0, 
+				0,0,1,0, 
+				x,y,z,1);
+	}
 	
+	public static Matrix4X4 getViewMatrix(Camera camera) {
+		Vec4 n = Vec4.sub(camera.getTarget(), camera.getPos()); // z
+		Vec4 u = Vec4.cross(new Vec4(0,1,0), n); // x
+		Vec4 v = Vec4.cross(n, u); // y
+		n.normalize();
+		u.normalize();
+		v.normalize();
+		
+		return new Matrix4X4(u.getX(), v.getX(), n.getX(), 0,
+							 u.getY(), v.getY(), n.getY(), 0,
+							 u.getZ(), v.getZ(), n.getZ(), 0,
+							 -camera.getPos().getX(), -camera.getPos().getY(), -camera.getPos().getZ(), 1);
+	}
 	
 	
 

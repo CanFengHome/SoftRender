@@ -15,16 +15,28 @@ public class Camera {
 	public void setPos(Vec4 pos) {
 		this.pos = pos;
 	}
-	public Vec4 getDir() {
+	public Vec4 getTarget() {
 		return target;
 	}
-	public void setDir(Vec4 dir) {
+	public void setTarget(Vec4 dir) {
 		this.target = dir;
 	}
+	
+	public float getViewDist() {
+		return viewDist;
+	}
+	
+	public float getViewPortWidth() {
+		return viewWidth;
+	}
+	
+	public float getViewPortHeight() {
+		return viewHeight;
+	}
 
-	private Vec4 u; // x
-	private Vec4 v; // y
-	private Vec4 n; // z
+//	private Vec4 u; // x
+//	private Vec4 v; // y
+//	private Vec4 n; // z
 	private float near;
 	private float far;
 	private float viewWidth;
@@ -39,20 +51,12 @@ public class Camera {
 	private float viewPlaneHeight;
 	private float viewDist; // d
 	
-	private Matrix4X4 mCam; // world -> camera
-	private Matrix4X4 mPer; // camera -> perspective
-	private Matrix4X4 mScr; // perspective -> screen
-	
 	Plane rightClipPlane;
 	Plane leftClipPlane;
 	Plane topClipPlane;
 	Plane bottomPlane;
 	
 	public void initPerspectiveVeiw(float fov, float near, float far, int width, int height) {
-		u = new Vec4(1,0,0);
-		v = new Vec4(0,1,0);
-		n = new Vec4(0,0,1);
-		
 		this.near = near;
 		this.far = far;
 		
@@ -70,19 +74,14 @@ public class Camera {
 		float tanFovDiv2 = (float)(Math.tan(MathUtil.DegToRad(fov/2.0f)));
 		viewDist = (0.5f * viewPlaneWidth) * tanFovDiv2;
 		
-		mCam = new Matrix4X4();
-		mCam.identity();
-		mPer = new Matrix4X4();
-		mPer.identity();
-		mScr = new Matrix4X4();
-		mScr.identity();
-		
 		// fov == 90
-		rightClipPlane = new Plane(new Vec3(0,0,0), new Vec3(1,0,-1));
-		leftClipPlane = new Plane(new Vec3(0,0,0), new Vec3(-1, 0, -1));
+		rightClipPlane = new Plane(new Vec3(0, 0, 0), new Vec3(1, 0, -1));
+		leftClipPlane = new Plane(new Vec3(0, 0, 0), new Vec3(-1, 0, -1));
 		topClipPlane = new Plane(new Vec3(0, 0, 0), new Vec3(0, 1, -1));
 		bottomPlane = new Plane(new Vec3(0, 0, 0), new Vec3(0, -1, -1));
 	}
+	
+
 }
 
 

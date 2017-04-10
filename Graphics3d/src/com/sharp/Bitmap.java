@@ -93,6 +93,14 @@ public class Bitmap
 		m_components[index + 2] = g;
 		m_components[index + 3] = r;
 	}
+	
+	public void DrawPixel(int x, int y, Color3B color) {
+		int index = (x + y * m_width) * 4;
+		m_components[index    ] = (byte)255;
+		m_components[index + 1] = color.getB();
+		m_components[index + 2] = color.getG();
+		m_components[index + 3] = color.getR();
+	}
 
 	public void CopyPixel(int destX, int destY, int srcX, int srcY, Bitmap src, float lightAmt)
 	{

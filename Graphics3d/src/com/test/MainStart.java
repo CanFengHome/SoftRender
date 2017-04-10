@@ -1,6 +1,6 @@
-package com.sharp;
+package com.test;
 
-import com.test.Test1;
+import com.sharp.GameApplication;
 
 public class MainStart {
 
