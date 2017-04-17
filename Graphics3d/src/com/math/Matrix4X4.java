@@ -167,10 +167,14 @@ public class Matrix4X4 {
 		u.normalize();
 		v.normalize();
 		
+		float x = -Vec4.dot(u, camera.getPos());
+		float y = -Vec4.dot(v, camera.getPos());
+		float z = -Vec4.dot(n, camera.getPos());
+		
 		return new Matrix4X4(u.getX(), v.getX(), n.getX(), 0,
 							 u.getY(), v.getY(), n.getY(), 0,
 							 u.getZ(), v.getZ(), n.getZ(), 0,
-							 -camera.getPos().getX(), -camera.getPos().getY(), -camera.getPos().getZ(), 1);
+							 x, y, z, 1);
 	}
 	
 	public static Matrix4X4 getScaleMatrix(float xScale, float yScale, float zScale) {
