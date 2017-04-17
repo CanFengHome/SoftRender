@@ -43,7 +43,7 @@ public class EngineApp {
 				previousTime = currentTime;
 			}
 
-			scene.update();
+			scene.update(delta);
 
 			window.getFrameBuffer().clear((byte) 0x80);
 			scene.render(window.getFrameBuffer());
