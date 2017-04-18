@@ -1,6 +1,7 @@
 package com.render;
 
 import com.engine.math.Matrix4f;
+import com.engine.math.Vector4f;
 
 public class RenderContext extends Bitmap
 {
@@ -40,15 +41,16 @@ public class RenderContext extends Bitmap
 	}
 
 	private void scanTriangle(Vertex minYVert, Vertex midYVert, Vertex maxYVert, boolean handedness) {
-		Edge topToBottom    = new Edge(minYVert, maxYVert);
-		Edge topToMiddle    = new Edge(minYVert, midYVert);
-		Edge middleToBottom = new Edge(midYVert, maxYVert);
+		Gradients gradients = new Gradients(minYVert, midYVert, maxYVert);
+		Edge topToBottom    = new Edge(gradients, minYVert, maxYVert, 0);
+		Edge topToMiddle    = new Edge(gradients, minYVert, midYVert, 0);
+		Edge middleToBottom = new Edge(gradients, midYVert, maxYVert, 1);
 
-		scanEdges(topToBottom, topToMiddle, handedness); // 上半部分
-		scanEdges(topToBottom, middleToBottom, handedness); // 下半部分
+		scanEdges(gradients, topToBottom, topToMiddle, handedness); // 上半部分
+		scanEdges(gradients, topToBottom, middleToBottom, handedness); // 下半部分
 	}
 
-	private void scanEdges(Edge a, Edge b, boolean handedness) {
+	private void scanEdges(Gradients gradients, Edge a, Edge b, boolean handedness) {
 		Edge left = a;
 		Edge right = b;
 		if (handedness) {
@@ -60,19 +62,27 @@ public class RenderContext extends Bitmap
 		int yStart = b.getYStart();
 		int yEnd = b.getYEnd();
 		for (int j = yStart; j < yEnd; j++) {
-			drawScanLine(left, right, j);
+			drawScanLine(gradients, left, right, j);
 			left.step();
 			right.step();
 		}
 	}
 
-	private void drawScanLine(Edge left, Edge right, int j) {
+	private void drawScanLine(Gradients gradients, Edge left, Edge right, int j) {
 		int xMin = (int)Math.ceil(left.getX());
 		int xMax = (int)Math.ceil(right.getX());
+		float xPrestep = xMin - left.getX();
+		
+		Vector4f color = left.getColor().Add(gradients.GetColorXStep().Mul(xPrestep));
 
 		for(int i = xMin; i < xMax; i++)
 		{
-			drawPixel(i, j, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF);
+			byte r = (byte)(color.GetX() * 255.0f + 0.5f);
+			byte g = (byte)(color.GetY() * 255.0f + 0.5f);
+			byte b = (byte)(color.GetZ() * 255.0f + 0.5f);
+
+			drawPixel(i, j, (byte)0xFF, b, g, r);
+			color = color.Add(gradients.GetColorXStep());
 		}
 	}
 }
