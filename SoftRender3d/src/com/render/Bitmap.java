@@ -4,9 +4,9 @@ import java.util.Arrays;
 
 public class Bitmap
 {
-	private final int m_width;
-	private final int m_height;
-	private final byte m_components[];
+	protected final int m_width;
+	protected final int m_height;
+	protected final byte m_components[];
 
 	public int getWidth() {
 		return m_width;

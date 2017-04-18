@@ -1,4 +1,7 @@
 package com.render;
+
+import com.engine.math.Matrix4f;
+
 public class RenderContext extends Bitmap
 {
 	public RenderContext(int width, int height)
@@ -6,7 +9,13 @@ public class RenderContext extends Bitmap
 		super(width, height);
 	}
 
-	public void fillTriangle(Vertex minYVert, Vertex midYVert, Vertex maxYVert) {
+	public void fillTriangle(Vertex v1, Vertex v2, Vertex v3) {
+		Matrix4f screenSpaceTransform = 
+				new Matrix4f().InitScreenSpaceTransform((float)m_width/2.0f, (float)m_height/2.0f);
+		Vertex minYVert = v1.Transform(screenSpaceTransform).PerspectiveDivide();
+		Vertex midYVert = v2.Transform(screenSpaceTransform).PerspectiveDivide();
+		Vertex maxYVert = v3.Transform(screenSpaceTransform).PerspectiveDivide();
+		
 		if (maxYVert.getY() < midYVert.getY()) {
 			Vertex temp = maxYVert;
 			maxYVert = midYVert;
