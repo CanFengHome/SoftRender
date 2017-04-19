@@ -10,7 +10,8 @@ public class MainStart {
 //		IRenderScene scene = new TestScene01(); // draw point
 //		IRenderScene scene = new TestScene02(); // fill trangle
 //		IRenderScene scene = new TestScene03(); // model view project screen
-		IRenderScene scene = new TestScene04(); // fill gradual
+//		IRenderScene scene = new TestScene04(); // fill gradual
+		IRenderScene scene = new TestScene05();
 		
 		EngineApp.getInstance().run(scene);
 	}
