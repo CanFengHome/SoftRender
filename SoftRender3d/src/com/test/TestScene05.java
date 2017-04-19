@@ -43,6 +43,7 @@ public class TestScene05 implements IRenderScene {
 		Matrix4f transform = projection.Mul(translation.Mul(rotation));
 
 		frameBuffer.clear((byte)0x00);
+		frameBuffer.ClearDepthBuffer();
 		frameBuffer.drawMesh(mesh, transform, texture);
 	}
 

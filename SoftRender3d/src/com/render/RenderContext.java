@@ -5,9 +5,20 @@ import com.engine.math.Vector4f;
 
 public class RenderContext extends Bitmap
 {
+	private float[] m_zBuffer;
+	
 	public RenderContext(int width, int height)
 	{
 		super(width, height);
+		m_zBuffer = new float[width * height];
+	}
+	
+	public void ClearDepthBuffer()
+	{
+		for(int i = 0; i < m_zBuffer.length; i++)
+		{
+			m_zBuffer[i] = Float.MAX_VALUE;
+		}
 	}
 	
 	public void drawMesh(Mesh mesh, Matrix4f transform, Bitmap texture)
@@ -28,6 +39,12 @@ public class RenderContext extends Bitmap
 		Vertex minYVert = v1.Transform(screenSpaceTransform).PerspectiveDivide();
 		Vertex midYVert = v2.Transform(screenSpaceTransform).PerspectiveDivide();
 		Vertex maxYVert = v3.Transform(screenSpaceTransform).PerspectiveDivide();
+		
+		// 只绘制顺时针的面
+		if(minYVert.TriangleAreaTimesTwo(maxYVert, midYVert) >= 0)
+		{
+			return;
+		}
 		
 		if (maxYVert.getY() < midYVert.getY()) {
 			Vertex temp = maxYVert;
@@ -89,21 +106,30 @@ public class RenderContext extends Bitmap
 		float texCoordXXStep = (right.GetTexCoordX() - left.GetTexCoordX())/xDist;
 		float texCoordYXStep = (right.GetTexCoordY() - left.GetTexCoordY())/xDist;
 		float oneOverZXStep = (right.GetOneOverZ() - left.GetOneOverZ())/xDist;
+		float depthXStep = (right.GetDepth() - left.GetDepth())/xDist;
 
 		float texCoordX = left.GetTexCoordX() + texCoordXXStep * xPrestep;
 		float texCoordY = left.GetTexCoordY() + texCoordYXStep * xPrestep;
 		float oneOverZ = left.GetOneOverZ() + oneOverZXStep * xPrestep;
-
+		float depth = left.GetDepth() + depthXStep * xPrestep;
+		
 		for(int i = xMin; i < xMax; i++)
 		{
-			float z = 1.0f/oneOverZ;
-			int srcX = (int)((texCoordX * z) * (float)(texture.getWidth() - 1) + 0.5f);
-			int srcY = (int)((texCoordY * z) * (float)(texture.getHeight() - 1) + 0.5f);
+			int index = i + j * getWidth();
+			if(depth < m_zBuffer[index])
+			{
+				m_zBuffer[index] = depth;
+				float z = 1.0f/oneOverZ;
+				int srcX = (int)((texCoordX * z) * (float)(texture.getWidth() - 1) + 0.5f);
+				int srcY = (int)((texCoordY * z) * (float)(texture.getHeight() - 1) + 0.5f);
 
-			copyPixel(i, j, srcX, srcY, texture);
+				copyPixel(i, j, srcX, srcY, texture);
+			}
+
 			oneOverZ += oneOverZXStep;
 			texCoordX += texCoordXXStep;
 			texCoordY += texCoordYXStep;
+			depth += depthXStep;
 		}
 	}
 }
