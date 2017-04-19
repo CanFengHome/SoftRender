@@ -10,7 +10,7 @@ public class RenderContext extends Bitmap
 		super(width, height);
 	}
 
-	public void fillTriangle(Vertex v1, Vertex v2, Vertex v3) {
+	public void fillTriangle(Vertex v1, Vertex v2, Vertex v3, Bitmap texture) {
 		Matrix4f screenSpaceTransform = 
 				new Matrix4f().InitScreenSpaceTransform((float)m_width/2.0f, (float)m_height/2.0f);
 		Vertex minYVert = v1.Transform(screenSpaceTransform).PerspectiveDivide();
@@ -37,20 +37,20 @@ public class RenderContext extends Bitmap
 
 		// 小于0，中间点在左侧
 		float area = minYVert.TriangleAreaTimesTwo(maxYVert, midYVert);		
-		scanTriangle(minYVert, midYVert, maxYVert, area >= 0);
+		scanTriangle(minYVert, midYVert, maxYVert, area >= 0, texture);
 	}
 
-	private void scanTriangle(Vertex minYVert, Vertex midYVert, Vertex maxYVert, boolean handedness) {
+	private void scanTriangle(Vertex minYVert, Vertex midYVert, Vertex maxYVert, boolean handedness, Bitmap texture) {
 		Gradients gradients = new Gradients(minYVert, midYVert, maxYVert);
 		Edge topToBottom    = new Edge(gradients, minYVert, maxYVert, 0);
 		Edge topToMiddle    = new Edge(gradients, minYVert, midYVert, 0);
 		Edge middleToBottom = new Edge(gradients, midYVert, maxYVert, 1);
 
-		scanEdges(gradients, topToBottom, topToMiddle, handedness); // 上半部分
-		scanEdges(gradients, topToBottom, middleToBottom, handedness); // 下半部分
+		scanEdges(topToBottom, topToMiddle, handedness, texture); // 上半部分
+		scanEdges(topToBottom, middleToBottom, handedness, texture); // 下半部分
 	}
 
-	private void scanEdges(Gradients gradients, Edge a, Edge b, boolean handedness) {
+	private void scanEdges(Edge a, Edge b, boolean handedness, Bitmap texture) {
 		Edge left = a;
 		Edge right = b;
 		if (handedness) {
@@ -62,27 +62,36 @@ public class RenderContext extends Bitmap
 		int yStart = b.getYStart();
 		int yEnd = b.getYEnd();
 		for (int j = yStart; j < yEnd; j++) {
-			drawScanLine(gradients, left, right, j);
+			drawScanLine(left, right, j, texture);
 			left.step();
 			right.step();
 		}
 	}
 
-	private void drawScanLine(Gradients gradients, Edge left, Edge right, int j) {
+	private void drawScanLine(Edge left, Edge right, int j, Bitmap texture) {
 		int xMin = (int)Math.ceil(left.getX());
 		int xMax = (int)Math.ceil(right.getX());
 		float xPrestep = xMin - left.getX();
 		
-		Vector4f color = left.getColor().Add(gradients.GetColorXStep().Mul(xPrestep));
+		float xDist = right.getX() - left.getX();
+		float texCoordXXStep = (right.GetTexCoordX() - left.GetTexCoordX())/xDist;
+		float texCoordYXStep = (right.GetTexCoordY() - left.GetTexCoordY())/xDist;
+		float oneOverZXStep = (right.GetOneOverZ() - left.GetOneOverZ())/xDist;
+
+		float texCoordX = left.GetTexCoordX() + texCoordXXStep * xPrestep;
+		float texCoordY = left.GetTexCoordY() + texCoordYXStep * xPrestep;
+		float oneOverZ = left.GetOneOverZ() + oneOverZXStep * xPrestep;
 
 		for(int i = xMin; i < xMax; i++)
 		{
-			byte r = (byte)(color.GetX() * 255.0f + 0.5f);
-			byte g = (byte)(color.GetY() * 255.0f + 0.5f);
-			byte b = (byte)(color.GetZ() * 255.0f + 0.5f);
+			float z = 1.0f/oneOverZ;
+			int srcX = (int)((texCoordX * z) * (float)(texture.getWidth() - 1) + 0.5f);
+			int srcY = (int)((texCoordY * z) * (float)(texture.getHeight() - 1) + 0.5f);
 
-			drawPixel(i, j, (byte)0xFF, b, g, r);
-			color = color.Add(gradients.GetColorXStep());
+			copyPixel(i, j, srcX, srcY, texture);
+			oneOverZ += oneOverZXStep;
+			texCoordX += texCoordXXStep;
+			texCoordY += texCoordYXStep;
 		}
 	}
 }

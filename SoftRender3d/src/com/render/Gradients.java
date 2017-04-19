@@ -4,22 +4,50 @@ import com.engine.math.Vector4f;
 
 public class Gradients
 {
-	private Vector4f[] m_color;
-	private Vector4f m_colorXStep;
-	private Vector4f m_colorYStep;
+	private float[] m_texCoordX;
+	private float[] m_texCoordY;
+	private float[] m_oneOverZ;
 
-	public Vector4f GetColor(int loc) { return m_color[loc]; }
-	public Vector4f GetColorXStep() { return m_colorXStep; }
-	public Vector4f GetColorYStep() { return m_colorYStep; }
+	private float m_texCoordXXStep;
+	private float m_texCoordXYStep;
+	private float m_texCoordYXStep;
+	private float m_texCoordYYStep;
+	private float m_oneOverZXStep;
+	private float m_oneOverZYStep;
+
+	public float GetTexCoordX(int loc) { return m_texCoordX[loc]; }
+	public float GetTexCoordY(int loc) { return m_texCoordY[loc]; }
+	public float GetOneOverZ(int loc) { return m_oneOverZ[loc]; }
+
+	public float GetTexCoordXXStep() { return m_texCoordXXStep; }
+	public float GetTexCoordXYStep() { return m_texCoordXYStep; }
+	public float GetTexCoordYXStep() { return m_texCoordYXStep; }
+	public float GetTexCoordYYStep() { return m_texCoordYYStep; }
+	public float GetOneOverZXStep() { return m_oneOverZXStep; }
+	public float GetOneOverZYStep() { return m_oneOverZYStep; }
+	
+	private float CalcXStep(float[] values, Vertex minYVert, Vertex midYVert,
+			Vertex maxYVert, float oneOverdX)
+	{
+		return
+			(((values[1] - values[2]) *
+			(minYVert.getY() - maxYVert.getY())) -
+			((values[0] - values[2]) *
+			(midYVert.getY() - maxYVert.getY()))) * oneOverdX;
+	}
+
+	private float CalcYStep(float[] values, Vertex minYVert, Vertex midYVert,
+			Vertex maxYVert, float oneOverdY)
+	{
+		return
+			(((values[1] - values[2]) *
+			(minYVert.getX() - maxYVert.getX())) -
+			((values[0] - values[2]) *
+			(midYVert.getX() - maxYVert.getX()))) * oneOverdY;
+	}
 
 	public Gradients(Vertex minYVert, Vertex midYVert, Vertex maxYVert)
 	{
-		m_color = new Vector4f[3];
-
-		m_color[0] = minYVert.getColor();
-		m_color[1] = midYVert.getColor();
-		m_color[2] = maxYVert.getColor();
-
 		float oneOverdX = 1.0f /
 			(((midYVert.getX() - maxYVert.getX()) *
 			(minYVert.getY() - maxYVert.getY())) -
@@ -28,16 +56,29 @@ public class Gradients
 
 		float oneOverdY = -oneOverdX;
 
-		m_colorXStep =  
-			(((m_color[1].Sub(m_color[2])).Mul(
-			(minYVert.getY() - maxYVert.getY()))).Sub(
-			((m_color[0].Sub(m_color[2])).Mul(
-			(midYVert.getY() - maxYVert.getY()))))).Mul(oneOverdX);
+		m_oneOverZ = new float[3];
+		m_texCoordX = new float[3];
+		m_texCoordY = new float[3];
 
-		m_colorYStep =  
-			(((m_color[1].Sub(m_color[2])).Mul(
-			(minYVert.getX() - maxYVert.getX()))).Sub(
-			((m_color[0].Sub(m_color[2])).Mul(
-			(midYVert.getX() - maxYVert.getX()))))).Mul(oneOverdY);
+		// Note that the W component is the perspective Z value;
+		// The Z component is the occlusion Z value
+		m_oneOverZ[0] = 1.0f/minYVert.getPosition().GetW();
+		m_oneOverZ[1] = 1.0f/midYVert.getPosition().GetW();
+		m_oneOverZ[2] = 1.0f/maxYVert.getPosition().GetW();
+
+		m_texCoordX[0] = minYVert.GetTexCoords().GetX() * m_oneOverZ[0];
+		m_texCoordX[1] = midYVert.GetTexCoords().GetX() * m_oneOverZ[1];
+		m_texCoordX[2] = maxYVert.GetTexCoords().GetX() * m_oneOverZ[2];
+
+		m_texCoordY[0] = minYVert.GetTexCoords().GetY() * m_oneOverZ[0];
+		m_texCoordY[1] = midYVert.GetTexCoords().GetY() * m_oneOverZ[1];
+		m_texCoordY[2] = maxYVert.GetTexCoords().GetY() * m_oneOverZ[2];
+
+		m_texCoordXXStep = CalcXStep(m_texCoordX, minYVert, midYVert, maxYVert, oneOverdX);
+		m_texCoordXYStep = CalcYStep(m_texCoordX, minYVert, midYVert, maxYVert, oneOverdY);
+		m_texCoordYXStep = CalcXStep(m_texCoordY, minYVert, midYVert, maxYVert, oneOverdX);
+		m_texCoordYYStep = CalcYStep(m_texCoordY, minYVert, midYVert, maxYVert, oneOverdY);
+		m_oneOverZXStep = CalcXStep(m_oneOverZ, minYVert, midYVert, maxYVert, oneOverdX);
+		m_oneOverZYStep = CalcYStep(m_oneOverZ, minYVert, midYVert, maxYVert, oneOverdY);
 	}
 }

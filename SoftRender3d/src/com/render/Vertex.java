@@ -5,7 +5,7 @@ import com.engine.math.Vector4f;
 
 public class Vertex {
 	private Vector4f pos;
-	private Vector4f color;
+	private Vector4f m_texCoords;
 
 	public float getX() {
 		return pos.GetX();
@@ -15,17 +15,17 @@ public class Vertex {
 		return pos.GetY();
 	}
 	
-	public Vector4f getColor() {
-		return color;
-	}
+	public Vector4f getPosition() { return pos; }
+	public Vector4f GetTexCoords() { return m_texCoords; }
 
 	public Vertex(float x, float y, float z) {
 		this.pos = new Vector4f(x, y, z, 1.0f);
 	}
 	
-	public Vertex(Vector4f pos, Vector4f color) {
+	public Vertex(Vector4f pos, Vector4f texCoords)
+	{
 		this.pos = pos;
-		this.color = color;
+		m_texCoords = texCoords;
 	}
 
 	public float TriangleAreaTimesTwo(Vertex b, Vertex c) {
@@ -39,11 +39,11 @@ public class Vertex {
 	}
 
 	public Vertex Transform(Matrix4f transform) {
-		return new Vertex(transform.Transform(pos), color);
+		return new Vertex(transform.Transform(pos), m_texCoords);
 	}
 
 	public Vertex PerspectiveDivide() {
 		return new Vertex(new Vector4f(pos.GetX()/pos.GetW(), pos.GetY()/pos.GetW(), 
-				pos.GetZ()/pos.GetW(), pos.GetW()), color);
+				pos.GetZ()/pos.GetW(), pos.GetW()), m_texCoords);
 	}
 }

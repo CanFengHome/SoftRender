@@ -36,6 +36,16 @@ public class Bitmap
 		m_components[index + 3] = r;
 	}
 
+	public void copyPixel(int destX, int destY, int srcX, int srcY, Bitmap src)
+	{
+		int destIndex = (destX + destY * m_width) * 4;
+		int srcIndex = (srcX + srcY * src.getWidth()) * 4;
+		m_components[destIndex    ] = src.m_components[srcIndex];
+		m_components[destIndex + 1] = src.m_components[srcIndex + 1];
+		m_components[destIndex + 2] = src.m_components[srcIndex + 2];
+		m_components[destIndex + 3] = src.m_components[srcIndex + 3];
+	}
+	
 	public void copyToByteArray(byte[] dest)
 	{
 		for(int i = 0; i < m_width * m_height; i++)

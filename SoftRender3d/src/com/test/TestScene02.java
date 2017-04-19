@@ -23,7 +23,7 @@ public class TestScene02 implements IRenderScene {
 	public void render(RenderContext frameBuffer) {
 		frameBuffer.clear((byte)0x00);
 
-		frameBuffer.fillTriangle(minYVert, midYVert, maxYVert);
+//		frameBuffer.fillTriangle(minYVert, midYVert, maxYVert);
 	}
 
 	@Override

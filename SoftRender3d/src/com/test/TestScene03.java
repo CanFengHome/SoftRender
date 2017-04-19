@@ -39,8 +39,8 @@ public class TestScene03 implements IRenderScene {
 		Matrix4f rotation = new Matrix4f().InitRotation(0.0f, rotCounter, 0.0f);
 		Matrix4f transform = projection.Mul(translation.Mul(rotation));
 		
-		frameBuffer.fillTriangle(maxYVert.Transform(transform), 
-				midYVert.Transform(transform), minYVert.Transform(transform));
+//		frameBuffer.fillTriangle(maxYVert.Transform(transform), 
+//				midYVert.Transform(transform), minYVert.Transform(transform));
 	}
 
 	@Override
