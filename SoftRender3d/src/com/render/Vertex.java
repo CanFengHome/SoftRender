@@ -46,4 +46,48 @@ public class Vertex {
 		return new Vertex(new Vector4f(pos.GetX()/pos.GetW(), pos.GetY()/pos.GetW(), 
 				pos.GetZ()/pos.GetW(), pos.GetW()), m_texCoords);
 	}
+	
+	public float get(int index)
+	{
+		switch(index)
+		{
+			case 0:
+				return pos.GetX();
+			case 1:
+				return pos.GetY();
+			case 2:
+				return pos.GetZ();
+			case 3:
+				return pos.GetW();
+			default:
+				throw new IndexOutOfBoundsException();
+		}
+	}
+	
+	public Vertex Lerp(Vertex other, float lerpAmt)
+	{
+		return new Vertex(
+				pos.Lerp(other.getPosition(), lerpAmt),
+				m_texCoords.Lerp(other.GetTexCoords(), lerpAmt));
+	}
+
+	public boolean IsInsideViewFrustum()
+	{
+		return 
+			Math.abs(pos.GetX()) <= Math.abs(pos.GetW()) &&
+			Math.abs(pos.GetY()) <= Math.abs(pos.GetW()) &&
+			Math.abs(pos.GetZ()) <= Math.abs(pos.GetW());
+	}
+
 }
+
+
+
+
+
+
+
+
+
+
+

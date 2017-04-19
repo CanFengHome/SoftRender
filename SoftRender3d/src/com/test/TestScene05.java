@@ -33,18 +33,19 @@ public class TestScene05 implements IRenderScene {
 	float rotCounter = 0.0f;
 	@Override
 	public void update(float delta) {
-		rotCounter += delta / 1000.0f;
+		rotCounter += delta / 5000.0f;
 	}
 
 	@Override
 	public void render(RenderContext frameBuffer) {
-		Matrix4f translation = new Matrix4f().InitTranslation(0.0f, 0.0f, 3.0f);
+		Matrix4f translation = new Matrix4f().InitTranslation(0.0f, 0.0f, 3.0f - 3 * (float)Math.sin(rotCounter));
 		Matrix4f rotation = new Matrix4f().InitRotation(rotCounter, 0.0f, rotCounter);
 		Matrix4f transform = projection.Mul(translation.Mul(rotation));
 
 		frameBuffer.clear((byte)0x00);
 		frameBuffer.ClearDepthBuffer();
-		frameBuffer.drawMesh(mesh, transform, texture);
+		
+		mesh.Draw(frameBuffer, transform, texture);
 	}
 
 	@Override
