@@ -1,5 +1,7 @@
 package com.test;
 
+import java.io.IOException;
+
 import com.engine.EngineApp;
 import com.engine.math.Matrix4f;
 import com.engine.math.Vector4f;
@@ -25,19 +27,24 @@ public class TestScene04 implements IRenderScene {
 		
 		projection = new Matrix4f().InitPerspective((float)Math.toRadians(90.0f),
 				winWidth/winHeight, 0.1f, 1000.0f);
-		
-		texture = new Bitmap(32, 32);
-		for(int j = 0; j < texture.getHeight(); j++)
-		{
-			for(int i = 0; i < texture.getWidth(); i++)
-			{
-				texture.drawPixel(i, j,
-					(byte)(Math.random() * 255.0 + 0.5),
-					(byte)(Math.random() * 255.0 + 0.5),
-					(byte)(Math.random() * 255.0 + 0.5),
-					(byte)(Math.random() * 255.0 + 0.5));
-			}
+
+		try {
+			texture = new Bitmap("./res/simpbricks.png");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+//		texture = new Bitmap(32, 32);
+//		for(int j = 0; j < texture.getHeight(); j++)
+//		{
+//			for(int i = 0; i < texture.getWidth(); i++)
+//			{
+//				texture.drawPixel(i, j,
+//					(byte)(Math.random() * 255.0 + 0.5),
+//					(byte)(Math.random() * 255.0 + 0.5),
+//					(byte)(Math.random() * 255.0 + 0.5),
+//					(byte)(Math.random() * 255.0 + 0.5));
+//			}
+//		}
 	}
 
 	@Override
